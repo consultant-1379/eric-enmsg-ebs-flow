@@ -1,0 +1,9 @@
+#!/bin/bash
+
+/sbin/rsyslogd
+
+# [TORF-564208]This is needed only until all applications run with jboss_user instead of root.
+mkdir -p /ericsson/symvol/pmlinks1/ebs /ericsson/symvol/pmlinks1/ebsl /ericsson/symvol/pmlinks1/ebsn /ericsson/symvol/pmlinks1/eba_ebss
+chown jboss_user:enm /ericsson/symvol/pmlinks1/ebs /ericsson/symvol/pmlinks1/ebsl /ericsson/symvol/pmlinks1/ebsn /ericsson/symvol/pmlinks1/eba_ebss
+
+exec su jboss_user -c "java -cp /ericsson/eps/ext-lib/*:/ericsson/eps/lib/*:/ericsson/ebsm/lib/*: -Xms2G -Xmx2G -XX:+UseParallelOldGC -XX:MaxGCPauseMillis=2 -XX:+ScavengeBeforeFullGC -server -Dcom.ericsson.component.aia.services.eps.module.cdi.enabled=false -Dcom.ericsson.component.aia.services.eps.module.deployment.folder.path=/var/ericsson/eps/ebsmflow/ -Dcom.ericsson.oss.mediation.pm.ebs.modelprovider.file.fileLocation=/ericsson/pmic1/ebsm/data/ebsm/countermapping/104slash_CXP9018505_22-L14B.xml -Djms.host.name=jms01 -Djms.host.port=8080 -Djms.user.name=ejbuser -Djms.user.password=ejbpassword1@ -Ds=ebs-eps1 -DEPS_INSTANCE_ID=ebs-eps1 -Dlogback.configurationFile=/ericsson/ebsm/etc/logbackCN.xml -Dcom.ericsson.component.aia.itpf.sdk.external.configuration.folder.path=/etc/opt/ericsson/zookeeper/conf/ -server -XX:+AggressiveOpts -XX:+UseCompressedOops -XX:+UseFastAccessorMethods -XX:+TieredCompilation -XX:+UseBiasedLocking -XX:+UseStringCache -Djava.net.preferIPv4Stack -XX:+DisableExplicitGC -Dsun.rmi.dgc.server.gcInterval=3600000 -Dsun.rmi.dgc.client.gcInterval=3600000 -Dcom.sun.management.jmxremote.port=21111 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false  com.ericsson.component.aia.services.eps.core.main.EpsApplication"
